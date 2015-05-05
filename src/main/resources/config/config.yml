@@ -1,0 +1,11 @@
+# Zabbix particulars
+host: "172.17.42.1"
+port: 32771
+username: "admin"
+password: "zabbix"
+jsonRpcPath: "zabbix/api_jsonrpc.php"
+
+
+#prefix used to show up metrics in AppDynamics
+metricPathPrefix:  "Custom Metrics|Zabbix|"
+
