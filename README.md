@@ -97,7 +97,7 @@ Always feel free to fork and contribute any changes directly here on GitHub.
 
 ##Community
 
-Find out more in the [AppSphere]() community.
+Find out more in the [AppSphere](http://community.appdynamics.com/t5/eXchange-Community-AppDynamics/Zabbix-Monitoring-Extension/idi-p/19199) community.
 
 ##Support
 
