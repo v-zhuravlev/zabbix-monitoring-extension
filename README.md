@@ -91,10 +91,6 @@ All the historic stats gathered by zabbix will be shown here
 | Zabbix/History/{Host ID}/Maximum number of processes |
  
 
-
-#Custom Dashboard
-![]()
-
 ##Contributing
 
 Always feel free to fork and contribute any changes directly here on GitHub.
