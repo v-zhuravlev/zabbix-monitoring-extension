@@ -25,19 +25,27 @@ import java.util.Map;
 public class ZabbixMonitor extends AManagedMonitor {
 
     private static final Logger logger = Logger.getLogger(ZabbixMonitor.class);
-
     public static final String METRIC_SEPARATOR = "|";
     private static final String CONFIG_ARG = "config-file";
     private static final String FILE_NAME = "monitors/ZabbixMonitor/config.yml";
 
     public ZabbixMonitor() {
+        printVersion(true);
+    }
+
+    private void printVersion(boolean toConsole) {
         String details = ZabbixMonitor.class.getPackage().getImplementationTitle();
         String msg = "Using Monitor Version [" + details + "]";
         logger.info(msg);
-        System.out.println(msg);
+        if (toConsole) {
+            System.out.println(msg);
+        }
     }
 
     public TaskOutput execute(Map<String, String> taskArgs, TaskExecutionContext taskExecutionContext) throws TaskExecutionException {
+
+        printVersion(false);
+
         if (taskArgs != null) {
             logger.info("Starting the Zabbix Monitoring task.");
             String configFilename = getConfigFilename(taskArgs.get(CONFIG_ARG));
@@ -64,15 +72,12 @@ public class ZabbixMonitor extends AManagedMonitor {
         }
     }
 
-
     private void printMetric(String metricName, String metricValue, String aggType, String timeRollupType, String clusterRollupType) {
         MetricWriter metricWriter = getMetricWriter(metricName,
                 aggType,
                 timeRollupType,
                 clusterRollupType
         );
-        //System.out.println("Sending [" + aggType + METRIC_SEPARATOR + timeRollupType + METRIC_SEPARATOR + clusterRollupType
-        //        + "] metric = " + metricName + " = " + metricValue);
         if (logger.isDebugEnabled()) {
             logger.debug("Sending [" + aggType + METRIC_SEPARATOR + timeRollupType + METRIC_SEPARATOR + clusterRollupType
                     + "] metric = " + metricName + " = " + metricValue);
@@ -80,18 +85,17 @@ public class ZabbixMonitor extends AManagedMonitor {
         metricWriter.printMetric(metricValue);
     }
 
-
     private Map<String, String> populateStats(Configuration config) throws TaskExecutionException {
         ZabbixApi zabbixAPI = createZabbixAPI(config);
 
         Map<String, String> stats = new HashMap<String, String>();
 
         ITServiceStatsCollector itServiceStatsCollector = new ITServiceStatsCollector();
-        Map<String, String> itServiceStats = itServiceStatsCollector.collect(zabbixAPI);
+        Map<String, String> itServiceStats = itServiceStatsCollector.collect(zabbixAPI, config);
         stats.putAll(itServiceStats);
 
         HistoryStatsCollector historyStatsCollector = new HistoryStatsCollector();
-        Map<String, String> historyStats = historyStatsCollector.collect(zabbixAPI);
+        Map<String, String> historyStats = historyStatsCollector.collect(zabbixAPI, config);
         stats.putAll(historyStats);
 
         return stats;
@@ -110,7 +114,7 @@ public class ZabbixMonitor extends AManagedMonitor {
     }
 
     private String buildZabbixURL(Configuration config) {
-        StringBuilder sb = new StringBuilder("http://");
+        StringBuilder sb = new StringBuilder(config.getProtocol()).append("://");
         sb.append(config.getHost()).append(":").append(config.getPort()).append("/").append(config.getJsonRpcPath());
         return sb.toString();
     }
@@ -134,13 +138,5 @@ public class ZabbixMonitor extends AManagedMonitor {
             configFileName = jarPath + File.separator + filename;
         }
         return configFileName;
-    }
-
-    public static void main(String[] args) throws TaskExecutionException {
-        ZabbixMonitor zabbixMonitor = new ZabbixMonitor();
-        Map<String, String> taskArgs = new HashMap<String, String>();
-        taskArgs.put(CONFIG_ARG, "/home/satish/AppDynamics/Code/extensions/zabbix-monitoring-extension/src/main/resources/config/config.yml");
-        zabbixMonitor.execute(taskArgs, null);
-
     }
 }

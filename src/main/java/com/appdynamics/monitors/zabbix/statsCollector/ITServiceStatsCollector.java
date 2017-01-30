@@ -1,5 +1,6 @@
 package com.appdynamics.monitors.zabbix.statsCollector;
 
+import com.appdynamics.monitors.zabbix.config.Configuration;
 import com.appdynamics.monitors.zabbix.exception.StatsCollectionException;
 import com.zabbix4j.ZabbixApi;
 import com.zabbix4j.ZabbixApiException;
@@ -16,7 +17,7 @@ public class ITServiceStatsCollector implements StatsCollector {
     private static final Logger logger = Logger.getLogger(ITServiceStatsCollector.class);
     private static final String IT_SERVICE_PATH_PREFIX = "ITService" + METRIC_SEPARATOR;
 
-    public Map<String, String> collect(ZabbixApi zabbixApi) {
+    public Map<String, String> collect(ZabbixApi zabbixApi, Configuration configuration) {
         Map<String, String> itServiceStats = new HashMap<String, String>();
         try {
             ITServiceGetRequest request = new ITServiceGetRequest();

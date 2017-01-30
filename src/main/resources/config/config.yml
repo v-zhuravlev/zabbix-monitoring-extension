@@ -1,10 +1,21 @@
 # Zabbix particulars
-host: "172.17.42.1"
-port: 32771
-username: "admin"
-password: "zabbix"
-jsonRpcPath: "zabbix/api_jsonrpc.php"
+protocol: "http"
+host: ""
+port:
+username: ""
+password: ""
+jsonRpcPath: "api_jsonrpc.php"
 
+#Include Exclude Hosts. Include takes precedence over exclude.
+includeHosts: []
+excludeHosts: []
+
+#Provide either includeItems or excludeItems
+#Only matched items will be included from the hosts after applying includeHosts/excludeHosts
+includeItems: []
+
+#Matched items will be excluded from the hosts after applying includeHosts/excludeHosts
+excludeItems: []
 
 #prefix used to show up metrics in AppDynamics
 metricPathPrefix:  "Custom Metrics|Zabbix|"
