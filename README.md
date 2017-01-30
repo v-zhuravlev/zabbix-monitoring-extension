@@ -27,15 +27,30 @@ mvn install:install-file -Dfile={path to zabbix4j jar} -DgroupId=com.zabbix4j -D
 <b>config.yml</b>
 ~~~
 # Zabbix particulars
-host: "172.17.42.1"
-port: 32771
-username: "admin"
-password: "zabbix"
-jsonRpcPath: "zabbix/api_jsonrpc.php"
+protocol: "http"
+host: ""
+port:
+username: ""
+password: ""
+jsonRpcPath: "api_jsonrpc.php"
 
+#Include Exclude Hosts. Include takes precedence over exclude.
+includeHosts: []
+excludeHosts: []
 
-#prefix used to show up metrics in AppDynamics
-metricPathPrefix:  "Custom Metrics|Zabbix|"
+#Provide either includeItems or excludeItems
+#Only matched items will be included from the hosts after applying includeHosts/excludeHosts
+includeItems: []
+
+#Matched items will be excluded from the hosts after applying includeHosts/excludeHosts
+excludeItems: []
+
+#This will create this metric in all the tiers, under this path
+#metricPrefix: Custom Metrics|Zabbix|
+
+#This will create it in specific Tier/Component. Make sure to replace <COMPONENT_ID> with the appropriate one from your environment.
+#To find the <COMPONENT_ID> in your environment, please follow the screenshot https://docs.appdynamics.com/display/PRO42/Build+a+Monitoring+Extension+Using+Java
+metricPrefix: Server|Component:<COMPONENT_ID>|Custom Metrics|Zabbix|
 ~~~
 
 ##Metrics
