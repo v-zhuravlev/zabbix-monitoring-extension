@@ -18,6 +18,8 @@ public class Configuration {
     private List<String> excludeItems;
     private List<String> includeItems;
 
+    private List<MetricCharacterReplacer> metricCharacterReplacer;
+
     private int historyMetricsFromMinutes;
 
     private String metricPathPrefix;
@@ -117,6 +119,14 @@ public class Configuration {
 
     public void setIncludeItems(List<String> includeItems) {
         this.includeItems = includeItems;
+    }
+
+    public List<MetricCharacterReplacer> getMetricCharacterReplacer() {
+        return metricCharacterReplacer;
+    }
+
+    public void setMetricCharacterReplacer(List<MetricCharacterReplacer> metricCharacterReplacer) {
+        this.metricCharacterReplacer = metricCharacterReplacer;
     }
 
     public int getHistoryMetricsFromMinutes() {

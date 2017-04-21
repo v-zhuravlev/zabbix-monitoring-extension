@@ -5,6 +5,7 @@ import com.appdynamics.extensions.util.metrics.Metric;
 import com.appdynamics.extensions.util.metrics.MetricFactory;
 import com.appdynamics.extensions.yml.YmlReader;
 import com.appdynamics.monitors.zabbix.config.Configuration;
+import com.appdynamics.monitors.zabbix.config.MetricCharacterReplacer;
 import com.appdynamics.monitors.zabbix.statsCollector.HistoryStatsCollector;
 import com.appdynamics.monitors.zabbix.statsCollector.ITServiceStatsCollector;
 import com.google.common.base.Strings;
@@ -21,6 +22,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ZabbixMonitor extends AManagedMonitor {
 
@@ -68,7 +71,24 @@ public class ZabbixMonitor extends AManagedMonitor {
     private void printStats(Configuration config, List<Metric> metrics) {
         String metricPathPrefix = config.getMetricPathPrefix();
         for (Metric aMetric : metrics) {
-            printMetric(metricPathPrefix + aMetric.getMetricPath(), aMetric.getMetricValue().toString(), aMetric.getAggregator(), aMetric.getTimeRollup(), aMetric.getClusterRollup());
+            String metricPath = aMetric.getMetricPath();
+            List<MetricCharacterReplacer> metricCharacterReplacers = config.getMetricCharacterReplacer();
+
+            for (MetricCharacterReplacer metricCharacterReplacer : metricCharacterReplacers) {
+                String replace = metricCharacterReplacer.getReplace();
+                String replaceWith = metricCharacterReplacer.getReplaceWith();
+
+                logger.debug("Replacing " + replace + " with " + replaceWith + " in " + metricPath);
+
+                Pattern pattern = Pattern.compile(replace);
+
+                Matcher matcher = pattern.matcher(metricPath);
+                metricPath = matcher.replaceAll(replaceWith);
+            }
+
+            logger.debug("Metric name after applying replacers " + metricPath);
+
+            printMetric(metricPathPrefix + metricPath, aMetric.getMetricValue().toString(), aMetric.getAggregator(), aMetric.getTimeRollup(), aMetric.getClusterRollup());
         }
     }
 
@@ -101,7 +121,7 @@ public class ZabbixMonitor extends AManagedMonitor {
         return stats;
     }
 
-    private ZabbixApi createZabbixAPI(Configuration config) throws TaskExecutionException {
+    protected ZabbixApi createZabbixAPI(Configuration config) throws TaskExecutionException {
         String url = buildZabbixURL(config);
         ZabbixApi zabbixApi = new ZabbixApi(url);
         try {
