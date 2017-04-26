@@ -45,6 +45,13 @@ includeItems: []
 #Matched items will be excluded from the hosts after applying includeHosts/excludeHosts
 excludeItems: []
 
+#Replaces characters in metric name with the specified characters.
+# "replace" takes any regular expression
+# "replaceWith" takes the string to replace the matched characters
+metricCharacterReplacer:
+   - replace: ","
+     replaceWith: ";"
+
 #This will create this metric in all the tiers, under this path
 #metricPathPrefix: Custom Metrics|Zabbix|
 
