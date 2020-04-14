@@ -1,7 +1,7 @@
 # Zabbix particulars
 protocol: "http"
 host: "localhost"
-port: 10050
+port: 80
 username: ""
 password: ""
 jsonRpcPath: "api_jsonrpc.php"
