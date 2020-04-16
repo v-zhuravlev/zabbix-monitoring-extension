@@ -42,7 +42,7 @@ public class HistoryStatsCollector implements StatsCollector {
 
             List<Integer> itemIds = getHistoryItems(zabbixApi, hostIds);
 
-            logger.info("Total number of history items for this minute" + itemIds.size());
+            logger.info("Total number of history items for this minute: " + itemIds.size());
 
             if (itemIds.size() <= 0) {
                 logger.info("No history items found for the given hosts for this minute");
